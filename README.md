@@ -21,7 +21,7 @@ Per rendere possibile tutto ciò sono state individuate e sviluppate le seguenti
 | Classe | Descrizione |
 |:---------:|:-----|
 | App | Rappresenta la classe "entry point" dell'applicazione. È responsabile di fornire all'utente il terminale e i menù per poter interagire con l'applicazione e l'istanza del peer |
-| GameState | È la classe le cui istanze saranno effettivamente ciò che verrà memorizzato all'interno della DHT. Rappresenta lo stato vero e prorio di una partita. Contiene, difatti, la matrice di gioco generata, la matrice iniziale e la soluzione e tiene traccia dei partecipanti (classe Player) e dei numeri già inseriti |
+| GameState | È la classe le cui istanze saranno effettivamente ciò che verrà memorizzato all'interno della DHT. Rappresenta lo stato vero e proprio di una partita. Contiene, difatti, la matrice di gioco generata, la matrice iniziale e la soluzione e tiene traccia dei partecipanti (classe Player) e dei numeri già inseriti |
 | JoinedGame | È una classe utilizzata *localmente* per rappresentare e tenere traccia delle partite a cui si sta partecipando con i rispettivi nickname utilizzati |
 | MessageListener | È la classe che implementa il metodo *parseMessage* per ricevere i messaggi provenienti dagli altri peer della rete |
 | Player | Rappresenta il singolo giocatore partecipante ad una partita. Al suo interno, infatti, sono memorizzati il suo nickname, lo stato della sua matrice, il suo *peerID* e il suo *PeerAddress* |
