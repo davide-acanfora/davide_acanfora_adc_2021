@@ -6,7 +6,7 @@ Progetto: **Sudoku Game**
 Studente: **Davide Acanfora** (matr. 0522500870)
 
 # Problema
-TODO
+Creazione di un'applicazione **P2P** basata sul gioco del *Sudoku* che permetta ai giocatori di creare e partecipare alle partite, di inserire i numeri sulla propria matrice di gioco e di tenere traccia dei punti dei partecipanti. Il tutto dovrà essere memorizzato su una DHT grazie all'impiego della libreria [TomP2P](https://tomp2p.net). Inoltre, per l'implementazione dei metodi fondamentali dell'applicazione, si dovrà seguire l'interfaccia dedicata [SudokuGame.java](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/src/main/java/it/davideacanfora/sudoku/SudokuGame.java).
 
 # Soluzione
 TODO
