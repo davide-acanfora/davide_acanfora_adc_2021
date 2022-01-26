@@ -11,16 +11,21 @@ Creazione di un'applicazione **P2P** basata sul gioco del *Sudoku* che permetta 
 # Soluzione
 In questa soluzione viene proposta un'applicazione interagibile da terminale (grazie alle librerie [args4j](https://github.com/kohsuke/args4j) e [text-io](https://github.com/beryx/text-io)) che permette ai giocatori di creare le proprie partite di Sudoku e di sfidare chiunque vi partecipi ad indovinare i valori di quante più celle possibili prima degli altri.
 
-Alla creazione di una nuova partita, ai giocatori sarà presentata una griglia di partenza comune per tutti, ma la particolarità è che i loro progressi non saranno condivisi, nè visibili agli altri: ognuno di loro avanzerà nel gioco inserendo i numeri nella propria griglia **personale**. In altre parole, ogni giocatore sarà ignaro dell'avanzamento degli altri partecipanti, ma potrà solo intiurne il loro progresso tramite, ad esempio, il loro punteggio in classifica che verrà aggiornato e segnalato tramite messaggi man mano che inseriranno un valore in una cella.
+Alla creazione di una nuova partita, ai giocatori sarà presentata una griglia di partenza comune per tutti, ma la particolarità è che i loro progressi non saranno condivisi, né visibili agli altri: ognuno di loro avanzerà nel gioco inserendo i numeri nella propria griglia **personale**. In altre parole, ogni giocatore sarà ignaro dell'avanzamento degli altri partecipanti, ma potrà solo intuirne il loro progresso tramite, ad esempio, il loro punteggio in classifica che verrà aggiornato e segnalato tramite messaggi man mano che inseriranno un valore in una cella.
 
 Inoltre, ogni giocatore è spinto ad indovinare il giusto valore di ogni cella prima degli altri: la DHT, infatti, terrà globalmente traccia delle celle nelle quali è stato inserito un valore corretto da uno qualsiasi dei partecipanti. Ciò implica che solo il giocatore che li immetterà per primo riceverà effettivamente punti, mentre non riceverà nulla se inserirà un numero corretto ma già indovinato da qualcuno o addirittura gli saranno sottratti dei punti se inserirà un valore errato in una cella.
 
-La partita terminerà quando almeno un giocatore completa la propria griglia personale, rendendo difatto inutili le successive azioni da parte degli altri giocatori, impossibilitati a guadagnare ulteriori punti.
+La partita terminerà quando almeno un giocatore completa la propria griglia personale, rendendo difatti inutili le successive azioni da parte degli altri giocatori, impossibilitati a guadagnare ulteriori punti.
 
-Per rendere possibile tutto ciò sono state individuate e sviluppate le segenti **classi**:
+Per rendere possibile tutto ciò sono state individuate e sviluppate le seguenti **classi**:
 | Classe | Descrizione |
-|:---------|:-----|
-|  |  |
+|:---------:|:-----|
+| App | Rappresenta la classe "entry point" dell'applicazione. È responsabile di fornire all'utente il terminale e i menù per poter interagire con l'applicazione e l'istanza del peer |
+| GameState | È la classe le cui istanze saranno effettivamente ciò che verrà memorizzato all'interno della DHT. Rappresenta lo stato vero e prorio di una partita. Contiene, difatti, la matrice di gioco generata, la matrice iniziale e la soluzione e tiene traccia dei partecipanti (classe Player) e dei numeri già inseriti |
+| JoinedGame | È una classe utilizzata *localmente* per rappresentare e tenere traccia delle partite a cui si sta partecipando con i rispettivi nickname utilizzati |
+| MessageListener | È la classe che implementa il metodo *parseMessage* per ricevere i messaggi provenienti dagli altri peer della rete |
+| Player | Rappresenta il singolo giocatore partecipante ad una partita. Al suo interno, infatti, sono memorizzati il suo nickname, lo stato della sua matrice, il suo *peerID* e il suo *PeerAddress* |
+| SudokuGameImpl | È la classe che implementa i metodi dell'interfaccia *SudokuGame*. Rappresenta, in sostanza, il peer che sarà utilizzato per connettersi alla rete ed è responsabile di effettuare tutte le operazioni sulla DHT e di implementare le funzionalità del gioco del Sudoku |
 
 Infine, la gestione delle dipendenze è resa possibile grazie a Maven, i cui dettagli sono disponibili nel file [pom.xml](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/pom.xml).
 
@@ -29,7 +34,7 @@ La fase di testing viene eseguita in automatico ogni volta che il progetto viene
 ```shell
 mvn test
 ```
-La classe responsabile ad implementare i test è [SudokuGameImplTest](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/src/test/java/it/davideacanfora/sudoku/SudokuGameImplTest.java), nella quale è presente una prima fase di *setup* (metodo con annotazione *@BeforeAll*) dove vengono istanziati tre peer di cui uno master. Ogni test (metodi con annotazione *@Test*) andrà a verificare il corretto funzionamento di una particolare funzionalità della classe *SudokuGameImpl*. Nel dettaglio, i test case elaborati sono:
+La classe responsabile ad implementare i test è [SudokuGameImplTest](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/src/test/java/it/davideacanfora/sudoku/SudokuGameImplTest.java), nella quale è presente una prima fase di *setup* (metodo con annotazione *@BeforeAll*) dove vengono istanziati tre peer di cui uno master. Ogni test (metodi con annotazione *@Test*) andrà a verificare il corretto funzionamento di una particolare funzionalità della classe *SudokuGameImpl*. Nel dettaglio, i test case proposti sono:
 
 | Nome | Obiettivo |
 |:---------|:-----|
