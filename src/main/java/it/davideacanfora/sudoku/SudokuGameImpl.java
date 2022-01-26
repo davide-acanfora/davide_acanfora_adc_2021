@@ -28,7 +28,7 @@ public class SudokuGameImpl implements SudokuGame
 	//IN TAL CASO: SFRUTTARE I SYSTEM ARGS DAL MAIN, PASSARLO POI AL COSTRUTTORE DI QUESTA CLASSE
 	private int MASTER_PORT = 4000;
 	
-	private HashMap<String, JoinedGame> joined_games = new HashMap<String, JoinedGame>();
+	private ArrayList<JoinedGame> joined_games = new ArrayList<>();
 	
 	//Costruttore principale
 	public SudokuGameImpl(int peerID, String master_address, MessageListener listener) throws IOException {
@@ -93,12 +93,11 @@ public class SudokuGameImpl implements SudokuGame
 				//aggiorno lo stato della partita per aggiornare la sua nuova lista dei partecipanti
 				dht.put(Number160.createHash(_game_name)).data(new Data(game)).start().awaitUninterruptibly();
 				
+				for(JoinedGame joined_game : joined_games)
+					if (joined_game.getGameName().equals(_game_name)) return false;
+				
 				//aggiungo questa partita ai games a cui partecipo
-				if (!joined_games.containsKey(_game_name))
-					//this.joined_games.put(_game_name, new JoinedGame(_game_name, _nickname, game.getInitialMatrix()));
-					this.joined_games.put(_game_name, new JoinedGame(_game_name, _nickname));
-				else
-					return false;
+				this.joined_games.add(new JoinedGame(_game_name, _nickname));
 				
 				//segnala agli altri giocatori il nostro ingresso
 				for(Player p : game.getPlayers())
@@ -194,9 +193,6 @@ public class SudokuGameImpl implements SudokuGame
 				//aggiorno lo stato della partita per aggiornare la sua nuova lista dei partecipanti
 				dht.put(Number160.createHash(joined_game.getGameName())).data(new Data(game)).start().awaitUninterruptibly();
 				
-				//rimuovo questa partita dai games a cui partecipo
-				joined_games.remove(joined_game.getGameName());
-				
 				//segnala agli altri giocatori la nostra uscita
 				for(Player p : game.getPlayers())
 					if(!p.getNickname().equals(joined_game.getNickname())) dht.peer().sendDirect(p.getPeerAddress()).object("["+joined_game.getGameName()+"] "+joined_game.getNickname()+" has left the game").start().awaitUninterruptibly();
@@ -214,9 +210,9 @@ public class SudokuGameImpl implements SudokuGame
 	
 	public boolean leaveAllJoinedGames() {
 		boolean errorFlag = false;
-		for(JoinedGame game: joined_games.values())
+		while(!joined_games.isEmpty())
 			//se trovo errori ad almeno ad una partita da cui provo ad uscire.. 
-			if (!leaveJoinedGame(game)) errorFlag = true; //imposto il flag per segnalare che ci sono stati errori
+			if (!leaveJoinedGame(joined_games.remove(0))) errorFlag = true; //imposto il flag per segnalare che ci sono stati errori
 		return !errorFlag;
 	}
 	
@@ -227,8 +223,12 @@ public class SudokuGameImpl implements SudokuGame
 	}
 
 	public boolean leave(String game_name) {
-		for(JoinedGame joined_game: joined_games.values())
-			if (joined_game.getGameName().equals(game_name)) return leaveJoinedGame(joined_game);
+		//for(JoinedGame joined_game: joined_games.values())
+		for(int i=0; i<joined_games.size(); i++) {
+			JoinedGame game = joined_games.get(i);
+			if (game.getGameName().equals(game_name))
+				return leaveJoinedGame(game);
+		}
 		return false;
 	}
 
