@@ -6,12 +6,18 @@ Progetto: **Sudoku Game**
 Studente: **Davide Acanfora** (matr. 0522500870)
 
 # Problema
-Creazione di un'applicazione **P2P** basata sul gioco del *Sudoku* che permetta ai giocatori di creare e partecipare alle partite, di inserire i numeri sulla propria matrice di gioco e di tenere traccia dei punti dei partecipanti. Il tutto dovrà essere memorizzato su una DHT grazie all'impiego della libreria [TomP2P](https://tomp2p.net). Inoltre, per l'implementazione dei metodi fondamentali dell'applicazione, si dovrà seguire l'interfaccia dedicata [SudokuGame.java](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/src/main/java/it/davideacanfora/sudoku/SudokuGame.java).
+Creazione di un'applicazione **P2P** basata sul gioco del *Sudoku* che permetta ai giocatori di creare e partecipare alle partite, di inserire i numeri sulla propria griglia di gioco e di tenere traccia dei punti di tutti i partecipanti. Il tutto dovrà essere memorizzato su una DHT grazie all'impiego della libreria [TomP2P](https://tomp2p.net). Inoltre, per l'implementazione dei principali metodi dell'applicazione, si dovrà rispettare l'interfaccia proposta [SudokuGame.java](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/src/main/java/it/davideacanfora/sudoku/SudokuGame.java).
 
 # Soluzione
-La soluzione proposta prevede un'applicazione da terminale (grazie alle librerie [args4j](https://github.com/kohsuke/args4j) e [text-io](https://github.com/beryx/text-io)) che permette ai giocatori di creare le proprie partite di Sudoku e 
+In questa soluzione viene proposta un'applicazione interagibile da terminale (grazie alle librerie [args4j](https://github.com/kohsuke/args4j) e [text-io](https://github.com/beryx/text-io)) che permette ai giocatori di creare le proprie partite di Sudoku e di sfidare chiunque vi partecipi ad indovinare i valori di quante più celle possibili prima degli altri.
 
-Per rendere possibile tutto ciò sono state individuate e sviluppate le segenti classi:
+Alla creazione di una nuova partita, ai giocatori sarà presentata una griglia di partenza comune per tutti, ma la particolarità è che i loro progressi non saranno condivisi, nè visibili agli altri: ognuno di loro avanzerà nel gioco inserendo i numeri nella propria griglia **personale**. In altre parole, ogni giocatore sarà ignaro del progresso degli altri partecipanti, ma potrà solo intiurne il loro progresso tramite, ad esempio, il loro punteggio in classifica che verrà aggiornato e segnalato tramite messaggi man mano che inseriranno un valore in una cella.
+
+Inoltre, ogni giocatore è spinto ad indovinare il giusto valore di ogni cella prima degli altri: la DHT, infatti, terrà globalmente traccia delle celle nelle quali è stato inserito un valore corretto da uno qualsiasi dei partecipanti. Ciò implica che solo il giocatore che li immetterà per primo riceverà effettivamente punti, mentre non riceverà nulla se inserirà un numero corretto ma già indovinato da qualcuno o addirittura gli saranno sottratti dei punti se inserirà un valore errato in una cella.
+
+La partita terminerà quando almeno un giocatore completa la propria griglia personale, rendendo difatto inutili le successive azioni da parte degli altri giocatori, impossibilitati a guadagnare ulteriori punti.
+
+Per rendere possibile tutto ciò sono state individuate e sviluppate le segenti **classi**:
 | Classe | Descrizione |
 |:---------|:-----|
 |  |  |
@@ -32,7 +38,7 @@ La classe responsabile ad implementare i test è [SudokuGameImplTest](https://gi
 | testCaseJoinInexistentGame | L'ingresso in una partita inesistente non è permesso |
 | testCaseJoinDifferentPlayerSameNickname | L'ingresso di due giocatori nella stessa partita con lo stesso nickname non è permesso |
 | testCaseJoinSamePlayerDifferentNickname | L'ingresso nella partita dallo stesso giocatore con nickname diversi non è permesso |
-| testCaseGetSudoku | Si può ottenere la propria matrice di gioco solo dalle partite a cui si sta partecipando |
+| testCaseGetSudoku | Si può ottenere la propria griglia di gioco solo dalle partite a cui si sta partecipando |
 
 Inoltre, alla fine di ogni singolo test ci sarà una fase di "pulizia" che consiste nel far abbandonare tutte le partite a cui i peer hanno eventualmente partecipato (annotazione *@AfterEach*), mentre alla fine di tutti i test permettiamo ai peer di abbandonare la rete tramite annuncio e conseguente shutdown del peer stesso (annotazione *@AfterAll*).
 
