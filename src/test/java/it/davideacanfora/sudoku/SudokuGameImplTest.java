@@ -70,10 +70,10 @@ public class SudokuGameImplTest {
 	
 	@AfterEach
 	public void leaveAllJoinedGames() {
-		assertTrue(peer0.leaveAllJoinedGames());
-		assertTrue(peer1.leaveAllJoinedGames());
-		assertTrue(peer2.leaveAllJoinedGames());
-	}
+        assertTrue(peer0.leaveAllJoinedGames());
+        assertTrue(peer1.leaveAllJoinedGames());
+        assertTrue(peer2.leaveAllJoinedGames());
+    }
 	
 	@AfterAll
 	public static void leaveNetwork() {

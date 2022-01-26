@@ -41,6 +41,8 @@ public class App {
 			terminal.getProperties().setInputColor(Color.blue);
 			int choice = 0;
 			
+			SudokuGameImpl sudoku = new SudokuGameImpl(peerID, master_address, new MessageListenerImpl(messages));
+			
 			printInfo("______  _____ ______   _____           _       _          \r\n"
 					+ "| ___ \\/ __  \\| ___ \\ /  ___|         | |     | |         \r\n"
 					+ "| |_/ /`' / /'| |_/ / \\ `--. _   _  __| | ___ | | ___   _ \r\n"
@@ -48,18 +50,18 @@ public class App {
 					+ "| |    ./ /___| |     /\\__/ / |_| | (_| | (_) |   <| |_| |\r\n"
 					+ "\\_|    \\_____/\\_|     \\____/ \\__,_|\\__,_|\\___/|_|\\_\\\\__,_|\r\n", infoColor);
 			
-			SudokuGameImpl sudoku = new SudokuGameImpl(peerID, "127.0.0.1", new MessageListenerImpl(messages));
+			String last_game = "sudoku";
 			
 			while (choice != 8) {
 				//Stampa del menu
 				printMenu();
 				
 				choice = textIO.newIntInputReader().withMinVal(1).withMaxVal(8).read("Choice");
-				String game_name;
+				String game_name = last_game;
 				
 				switch (choice) {
 				case 1:
-					game_name = textIO.newStringInputReader().withDefaultValue("sudoku").read("Game name");
+					game_name = textIO.newStringInputReader().withDefaultValue(last_game).read("Game name");
 					Integer[][] new_game = sudoku.generateNewSudoku(game_name);
 					if (new_game != null) {
 						printInfo("New game \""+game_name+"\" created successfully, its initial matrix is:", infoColor);
@@ -71,7 +73,7 @@ public class App {
 					break;
 					
 				case 2:
-					game_name = textIO.newStringInputReader().withDefaultValue("sudoku").read("Game name");
+					game_name = textIO.newStringInputReader().withDefaultValue(last_game).read("Game name");
 					String nickname = textIO.newStringInputReader().withDefaultValue("Player").read("Nickname");
 					if (sudoku.join(game_name, nickname)) {
 						printInfo("Joined game \""+game_name+"\" successfully, here is your initial matrix:", infoColor);
@@ -82,7 +84,7 @@ public class App {
 					break;
 					
 				case 3:
-					game_name = textIO.newStringInputReader().withDefaultValue("sudoku").read("Game name");
+					game_name = textIO.newStringInputReader().withDefaultValue(last_game).read("Game name");
 					Integer[][] matrix_to_print = sudoku.getSudoku(game_name);
 					if (matrix_to_print != null)
 						printMatrix(matrix_to_print);
@@ -91,7 +93,7 @@ public class App {
 					break;
 					
 				case 4:
-					game_name = textIO.newStringInputReader().withDefaultValue("sudoku").read("Game name");
+					game_name = textIO.newStringInputReader().withDefaultValue(last_game).read("Game name");
 					Integer row = textIO.newIntInputReader().withMinVal(1).withMaxVal(9).read("Row");
 					Integer column = textIO.newIntInputReader().withMinVal(1).withMaxVal(9).read("Column");
 					Integer number = textIO.newIntInputReader().withMinVal(1).withMaxVal(9).read("Number");
@@ -113,7 +115,7 @@ public class App {
 					break;
 					
 				case 5:
-					game_name = textIO.newStringInputReader().withDefaultValue("sudoku").read("Game name");
+					game_name = textIO.newStringInputReader().withDefaultValue(last_game).read("Game name");
 					if (sudoku.leave(game_name))
 						printInfo("Game \""+game_name+"\" left successfully\n", infoColor);
 					else
@@ -121,7 +123,7 @@ public class App {
 					break;
 				
 				case 6:
-					game_name = textIO.newStringInputReader().withDefaultValue("sudoku").read("Game name");
+					game_name = textIO.newStringInputReader().withDefaultValue(last_game).read("Game name");
 					ArrayList<Player> leaderboard = sudoku.getLeaderboard(game_name);
 					if (leaderboard != null) {
 						if(leaderboard.size()>0) {
@@ -156,6 +158,8 @@ public class App {
 				default:
 					break;
 				}
+				
+				last_game = game_name;
 			}
 			
 			terminal.abort();

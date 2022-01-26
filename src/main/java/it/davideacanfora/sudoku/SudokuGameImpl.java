@@ -24,7 +24,7 @@ public class SudokuGameImpl implements SudokuGame
 	private PeerDHT dht;
 	private int peerID;
 	
-	//POSSIBILITà DI SETTARE MASTER PORT DA DOCKER?
+	//Possibilità di settare master port da docker?
 	//IN TAL CASO: SFRUTTARE I SYSTEM ARGS DAL MAIN, PASSARLO POI AL COSTRUTTORE DI QUESTA CLASSE
 	private int MASTER_PORT = 4000;
 	
@@ -44,7 +44,7 @@ public class SudokuGameImpl implements SudokuGame
 			peer.discover().peerAddress(fb.bootstrapTo().iterator().next()).start().awaitUninterruptibly();
 		} else {
 			//qualcosa è andato storto nel bootstrap
-			throw new IOException("Eccezione durante la fase di bootstrap");
+			throw new IOException("Something went wrong during bootstrap");
 		}
 		
 		if (listener!=null)
