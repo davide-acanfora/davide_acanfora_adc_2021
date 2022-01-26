@@ -16,7 +16,7 @@ La fase di testing viene eseguita in automatico ogni volta che il progetto viene
 ```shell
 mvn test
 ```
-La classe responsabile ad implementare i test è *SudokuGameImplTest*, nella quale è presente una prima fase di *setup* (annotazione *@BeforeAll*) dove vengono istanziati tre peer di cui uno master. Ogni test (annotazione *@Test*) andrà a verificare il corretto funzionamento di una particolare funzionalità della classe *SudokuGameImpl*. Nel dettaglio sono:
+La classe responsabile ad implementare i test è *SudokuGameImplTest*, nella quale è presente una prima fase di *setup* (metodo con annotazione *@BeforeAll*) dove vengono istanziati tre peer di cui uno master. Ogni test (metodi con annotazione *@Test*) andrà a verificare il corretto funzionamento di una particolare funzionalità della classe *SudokuGameImpl*. Nel dettaglio, i test case elaborati sono:
 
 | Nome | Obiettivo |
 |:---------|:-----|
@@ -25,9 +25,9 @@ La classe responsabile ad implementare i test è *SudokuGameImplTest*, nella qua
 | testCaseJoinInexistentGame | Ingresso in una partita inesistente non permesso |
 | testCaseJoinDifferentPlayerSameNickname | Ingresso di due giocatori nella stessa partita con lo stesso nickname non permesso |
 | testCaseJoinSamePlayerDifferentNickname | Ingresso dello stesso giocatore più volte nella stessa partita con nickname divero non permesso |
-| testCaseGetSudoku | Ottenimento della propria matrice di gioco da una partita solo se vi si è precedentemente entrati |
+| testCaseGetSudoku | Ottenimento della propria matrice di gioco da una partita solo se vi si sta partecipando |
 
-...
+Inoltre, alla fine di ogni singolo test ci sarà una fase di "pulizia" che consiste nel far abbandonare tutte le partite a cui i peer hanno eventualmente partecipato (annotazione *@AfterEach*), mentre alla fine di tutti i test permettiamo ai peer di abbandonare la rete tramite annuncio e conseguente shutdown del peer stesso (annotazione *@AfterAll*).
 
 # Usage & Docker
 TODO
