@@ -22,7 +22,7 @@ Per rendere possibile tutto ciò sono state individuate e sviluppate le segenti 
 |:---------|:-----|
 |  |  |
 
-Infine, la gestione delle dipendenze è resa possibile grazie a Maven, i cui dettagli sono disponibili nel file [pom.xml](https://github.com/davide-acanfora/davide_acanfora_adc_2021/pom.xml).
+Infine, la gestione delle dipendenze è resa possibile grazie a Maven, i cui dettagli sono disponibili nel file [pom.xml](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/pom.xml).
 
 # Testing
 La fase di testing viene eseguita in automatico ogni volta che il progetto viene compilato tramite Maven grazie all'utilizzo di **JUnit 5** e del plugin **Surefire**. È possibile, inoltre, eseguire esplicitamente i test lanciando nella directory del progetto il comando:
