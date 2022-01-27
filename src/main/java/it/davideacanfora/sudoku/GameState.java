@@ -127,8 +127,8 @@ public class GameState implements Serializable {
 	public boolean isPeerIDPresent(Integer peerID) {
 		Iterator<Player> iterator = players.iterator();
 		while(iterator.hasNext())
-			if (iterator.next().getPeerID() == peerID)
-				return true;
+			if (iterator.next().getPeerID().equals(peerID))
+				return true; 
 		return false;
 	}
 	
@@ -148,7 +148,7 @@ public class GameState implements Serializable {
 		Iterator<Player> iterator = players.iterator();
 		while(iterator.hasNext()) {
 			Player player = iterator.next();
-			if (player.getPeerID() == peerID)
+			if (player.getPeerID().equals(peerID))
 				return player; 
 		}
 		return null;
@@ -166,15 +166,14 @@ public class GameState implements Serializable {
 		Iterator<Player> iterator = players.iterator();
 		while(iterator.hasNext()) {
 			Player player = iterator.next();
-			if (player.getPeerID() == peerID) {
+			if (player.getPeerID().equals(peerID))
 				return players.remove(player);
-			}
 		}
 		return false;
 	}
 	
 	public boolean isCorrectNumber(int _i, int _j, int _number) {
-		return _number == this.solution[_i][_j];
+		return this.solution[_i][_j].equals(_number);
 	}
 	
 	public boolean isAlreadyPlaced(int _i, int _j) {

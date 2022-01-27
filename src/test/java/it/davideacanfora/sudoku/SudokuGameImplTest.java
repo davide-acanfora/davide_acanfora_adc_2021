@@ -60,13 +60,23 @@ public class SudokuGameImplTest {
 	}
 	
 	@Test
+	public void testCaseJoinAfterLeave(TestInfo testInfo){
+		assertNotNull(peer0.generateNewSudoku("test_leave_join"));
+		assertTrue(peer0.join("test_leave_join", "Alice"));
+		assertTrue(peer1.join("test_leave_join", "Bob"));
+		assertTrue(peer1.leave("test_leave_join"));
+		assertTrue(peer1.join("test_leave_join", "Mario"));
+		assertTrue(peer1.leave("test_leave_join"));
+		assertTrue(peer1.join("test_leave_join", "Luigi"));
+	}
+	
+	@Test
 	public void testCaseGetSudoku(TestInfo testInfo){
 		assertNotNull(peer0.generateNewSudoku("test_get_sudoku"));
 		assertTrue(peer0.join("test_get_sudoku", "Alice"));
 		assertNotNull(peer0.getSudoku("test_get_sudoku"));
 		assertNull(peer1.getSudoku("test_get_sudoku"));
 	}
-	
 	
 	@AfterEach
 	public void leaveAllJoinedGames() {

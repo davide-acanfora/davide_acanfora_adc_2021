@@ -85,21 +85,23 @@ public class SudokuGameImpl implements SudokuGame
 				GameState game = (GameState) futureGet.dataMap().values().iterator().next().object();
 				//verifica se sto già partecipando a questa partita (tramite peerID)
 				//verifica se qualcuno sta già usando il mio nickname
-				if (game.isPeerIDPresent(this.peerID) || game.isNicknamePresent(_nickname)) return false;
+				if (game.isPeerIDPresent(this.peerID) || game.isNicknamePresent(_nickname))
+					return false;
 				
 				//mi aggiungo alla lista dei player della partita
 				game.addPlayer(new Player(_nickname, game.getInitialMatrix(), this.peer.peerAddress(), this.peerID));
 				
-				//aggiorno lo stato della partita per aggiornare la sua nuova lista dei partecipanti
-				dht.put(Number160.createHash(_game_name)).data(new Data(game)).start().awaitUninterruptibly();
-				
 				for(JoinedGame joined_game : joined_games)
-					if (joined_game.getGameName().equals(_game_name)) return false;
+					if (joined_game.getGameName().equals(_game_name))
+						return false;
 				
 				//aggiungo questa partita ai games a cui partecipo
 				this.joined_games.add(new JoinedGame(_game_name, _nickname));
 				
-				//segnala agli altri giocatori il nostro ingresso
+				//aggiorno lo stato della partita per aggiornare la sua nuova lista dei partecipanti
+				dht.put(Number160.createHash(_game_name)).data(new Data(game)).start().awaitUninterruptibly();
+				
+				//segnalo agli altri giocatori il mio ingresso
 				for(Player p : game.getPlayers())
 					if(!p.getNickname().equals(_nickname)) dht.peer().sendDirect(p.getPeerAddress()).object("["+_game_name+"] "+_nickname+" has joined the game").start().awaitUninterruptibly();
 				
@@ -184,8 +186,6 @@ public class SudokuGameImpl implements SudokuGame
 			//verifica se esiste
 			if (futureGet.isSuccess() && !futureGet.isEmpty()) { 
 				GameState game = (GameState) futureGet.dataMap().values().iterator().next().object();
-				//verifica se sto già partecipando a questa partita e se sto utilizzando il nickname memorizzato
-				if (game.isPeerIDPresent(this.peerID) && game.isNicknamePresent(joined_game.getNickname())) return false;
 				
 				//mi rimuovo dalla lista dei player partecipanti
 				if (!game.removePlayerByPeerID(this.peerID)) return false;
@@ -197,7 +197,7 @@ public class SudokuGameImpl implements SudokuGame
 				for(Player p : game.getPlayers())
 					if(!p.getNickname().equals(joined_game.getNickname())) dht.peer().sendDirect(p.getPeerAddress()).object("["+joined_game.getGameName()+"] "+joined_game.getNickname()+" has left the game").start().awaitUninterruptibly();
 				
-				return true;
+				return joined_games.remove(joined_game);
 			}
 			else {
 				return false;
@@ -212,7 +212,7 @@ public class SudokuGameImpl implements SudokuGame
 		boolean errorFlag = false;
 		while(!joined_games.isEmpty())
 			//se trovo errori ad almeno ad una partita da cui provo ad uscire.. 
-			if (!leaveJoinedGame(joined_games.remove(0))) errorFlag = true; //imposto il flag per segnalare che ci sono stati errori
+			if (!leaveJoinedGame(joined_games.get(0))) errorFlag = true; //imposto il flag per segnalare che ci sono stati errori
 		return !errorFlag;
 	}
 	
@@ -223,7 +223,6 @@ public class SudokuGameImpl implements SudokuGame
 	}
 
 	public boolean leave(String game_name) {
-		//for(JoinedGame joined_game: joined_games.values())
 		for(int i=0; i<joined_games.size(); i++) {
 			JoinedGame game = joined_games.get(i);
 			if (game.getGameName().equals(game_name))
