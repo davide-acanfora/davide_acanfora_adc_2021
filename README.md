@@ -32,7 +32,7 @@ Infine, la gestione delle dipendenze è resa possibile grazie a Maven, i cui det
 # Testing
 La fase di testing viene eseguita in automatico ogni volta che il progetto viene compilato tramite Maven grazie all'utilizzo di **JUnit 5** e del plugin **Surefire**. È possibile, inoltre, eseguire esplicitamente i test lanciando nella directory del progetto il comando:
 ```shell
-mvn test
+$ mvn test
 ```
 La classe responsabile ad implementare i test è [SudokuGameImplTest](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/src/test/java/it/davideacanfora/sudoku/SudokuGameImplTest.java), nella quale è presente una prima fase di *setup* (metodo con annotazione *@BeforeAll*) dove vengono istanziati tre peer di cui uno master. Ogni test (metodi con annotazione *@Test*) andrà a verificare il corretto funzionamento di una particolare funzionalità della classe *SudokuGameImpl*. Nel dettaglio, i test case proposti sono:
 
@@ -48,5 +48,44 @@ La classe responsabile ad implementare i test è [SudokuGameImplTest](https://gi
 
 Inoltre, alla fine di ogni singolo test ci sarà una fase di "pulizia" che consiste nel far abbandonare tutte le partite a cui i peer hanno eventualmente partecipato (annotazione *@AfterEach*), mentre alla fine di tutti i test permettiamo ai peer di abbandonare la rete tramite annuncio e conseguente shutdown del peer stesso (annotazione *@AfterAll*).
 
-# Usage & Docker
-TODO
+# Usage
+Prima di utilizzare l'applicazione è necessario farne la build:
+```shell
+$ mvn package
+```
+
+Dopodiché sarà possibile lanciare il relativo JAR con gli eventuali parametri situato nella directory *target*:
+```shell
+$ java -jar sudoku-1.0-jar-with-dependencies.jar -i <PEER ID> -m <MASTER ADDRESS>
+```
+**Attenzione**: è sempre necessario avviare prima un **master** peer, ovvero con *PEER ID*=0, e poi i restanti *slave*.
+
+## Docker
+Per facilitare l'utilizzo dell'applicazione è possibile lanciarla tramite container Docker. Per fare ciò basta recuperare il Dockerfile contenuto in questa repository e avviare la build multi-stage dell'immagine tramite il comando:
+```shell
+$ docker build --no-cache -t davide-acanfora/sudoku .
+```
+
+A questo punto possiamo lanciare i nostri peer:
+
+Master
+```shell
+$ docker run -i --rm --name MASTER_PEER -e ID=0 davide-acanfora/sudoku
+```
+
+Slave
+```shell
+$ docker run -i --rm --name PEER1 -e ID=1 -e MASTER=<MASTER ADDRESS> davide-acanfora/sudoku
+```
+
+**Attenzione:** in questo caso il valore *MASTER ADDRESS* per la variabile d'ambiente *MASTER* può essere facilmente recuperato dal suo container Docker mentre è in esecuzione. Se, ad esempio, il container è stato avviato chiamandolo *MASTER_PEER* come nel comando precedente, per ottenere il suo indirizzo, basterà lanciare il comando:
+```shell
+$ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' MASTER_PEER
+'172.17.0.2'
+```
+
+A questo punto conosciamo l'indirizzo del peer master e possiamo lanciare gli slave specificando il giusto valore per la variabile d'ambiente:
+```shell
+$ docker run -i --rm --name PEER1 -e ID=1 -e MASTER=172.17.0.2 davide-acanfora/sudoku
+```
+
