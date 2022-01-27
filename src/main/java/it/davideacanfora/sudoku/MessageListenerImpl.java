@@ -12,7 +12,6 @@ public class MessageListenerImpl implements MessageListener {
 	@Override
 	public Object parseMessage(Object obj) {
 		this.messages.add(obj.toString());
-		java.awt.Toolkit.getDefaultToolkit().beep();
 		return true;
 	}
 	

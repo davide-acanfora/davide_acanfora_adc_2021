@@ -16,7 +16,7 @@ public class App {
 	//Gestisce il menu dell'utente
 	//Istanzia la classe Sudoku e la utilizza per tutte le operazioni
 	
-	@Option(name = "-m", aliases = "--master", usage = "the master peer IP address", required = false)
+	@Option(name = "-m", aliases = "--master", usage = "the IP address of the master peer", required = false)
 	private static String master_address = "127.0.0.1";
 	
 	@Option(name = "-i", aliases = "--id", usage = "the unique ID the peer will use", required = true)
@@ -30,15 +30,16 @@ public class App {
 	
 	public static void main(String[] args) {
 		CmdLineParser parser = new CmdLineParser(new App());
+		TextIO textIO = TextIoFactory.getTextIO();
+		terminal = textIO.getTextTerminal();
+		terminal.getProperties().setPaneBackgroundColor("black");
+		terminal.getProperties().setPromptBackgroundColor("black");
+		terminal.getProperties().setPromptColor(Color.white);
+		terminal.getProperties().setInputColor(Color.blue);
+		
 		try {
 			parser.parseArgument(args);			
 			
-			TextIO textIO = TextIoFactory.getTextIO();
-			terminal = textIO.getTextTerminal();
-			terminal.getProperties().setPaneBackgroundColor("black");
-			terminal.getProperties().setPromptBackgroundColor("black");
-			terminal.getProperties().setPromptColor(Color.white);
-			terminal.getProperties().setInputColor(Color.blue);
 			int choice = 0;
 			
 			SudokuGameImpl sudoku = new SudokuGameImpl(peerID, master_address, new MessageListenerImpl(messages));
@@ -162,15 +163,15 @@ public class App {
 				last_game = game_name;
 			}
 			
-			terminal.abort();
-			System.exit(0);
-			
 		} catch (CmdLineException e) {
 			//errore parsing argomenti
 			e.printStackTrace();
 		} catch (IOException e) {
 			//errore bootstrap P2P
 			e.printStackTrace();
+		} finally {
+			terminal.abort();
+			System.exit(0);
 		}
 		
 	}
