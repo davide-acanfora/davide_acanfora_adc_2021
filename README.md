@@ -43,6 +43,7 @@ La classe responsabile ad implementare i test è [SudokuGameImplTest](https://gi
 | testCaseJoinInexistentGame | L'ingresso in una partita inesistente non è permesso |
 | testCaseJoinDifferentPlayerSameNickname | L'ingresso di due giocatori nella stessa partita con lo stesso nickname non è permesso |
 | testCaseJoinSamePlayerDifferentNickname | L'ingresso nella partita dallo stesso giocatore con nickname diversi non è permesso |
+| testCaseJoinAfterLeave | Ingresso in una partita dalla quale si è precedentemente usciti (stress test di *JoinedGame*) |
 | testCaseGetSudoku | Si può ottenere la propria griglia di gioco solo dalle partite a cui si sta partecipando |
 
 Inoltre, alla fine di ogni singolo test ci sarà una fase di "pulizia" che consiste nel far abbandonare tutte le partite a cui i peer hanno eventualmente partecipato (annotazione *@AfterEach*), mentre alla fine di tutti i test permettiamo ai peer di abbandonare la rete tramite annuncio e conseguente shutdown del peer stesso (annotazione *@AfterAll*).
