@@ -61,7 +61,7 @@ $ java -jar sudoku-1.0-jar-with-dependencies.jar -i <PEER ID> -m <MASTER ADDRESS
 **Attenzione**: è sempre necessario avviare prima un **master** peer, ovvero con *PEER ID*=0, e poi i restanti *slave*.
 
 ## Docker
-Per facilitare l'utilizzo dell'applicazione è possibile lanciarla tramite container Docker. Per fare ciò basta recuperare il Dockerfile contenuto in questa repository e avviare la build multi-stage dell'immagine tramite il comando:
+Per facilitare l'utilizzo dell'applicazione è possibile lanciarla tramite container Docker. Per fare ciò basta recuperare il [Dockerfile](https://github.com/davide-acanfora/davide_acanfora_adc_2021/blob/master/Dockerfile) contenuto in questa repository e avviare la build multi-stage dell'immagine tramite il comando:
 ```shell
 $ docker build --no-cache -t davide-acanfora/sudoku .
 ```
